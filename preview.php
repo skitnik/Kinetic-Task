@@ -1,10 +1,12 @@
 <?php
-require_once "functions.php";
+require_once "classes/Database.php";
 
 if(isset($_POST['preview'])){
-	$images = display_images();
-	if(!empty($images)){
-		foreach($images as $image){
+	// $images = display_images();
+	$db = new Database();
+	$allImages = $db->getRows("SELECT * FROM images");
+	if(!empty($allImages)){
+		foreach($allImages as $image){
 			echo "<img class='img-preview' src='data:image/png;base64,". base64_encode($image['image']) ."'/>";
 		}
 	}

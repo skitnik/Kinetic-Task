@@ -1,3 +1,27 @@
+canvas.on('object:added',function(){
+  if(!isRedoing){
+    h = [];
+  }
+  isRedoing = false;
+});
+
+var isRedoing = false;
+var h = [];
+
+$("#undo").click(function(){
+if(canvas._objects.length>0){
+   h.push(canvas._objects.pop());
+   canvas.renderAll();
+  }
+});
+
+$("#redo").click(function(){
+	if(h.length>0){
+	    isRedoing = true;
+	   canvas.add(h.pop());
+	  }
+});
+
 $('#clear').click(function(){
 	canvas.clear();
 })
@@ -24,24 +48,31 @@ $("#add-circle").click(function(){
 });
 
 $("#add-text").click(function(){
-	var text = prompt("Enter some text");
+	$("#text").css("display","inline-block");
+	$("#text-color").css("display","inline-block");
+	$("#text-submit").css("display","inline-block");
+	
+})
+
+$("#text-submit").click(function(){
+	var text = $("#text").val();
+	var textColor = $("#text-color").val();
 	var textElement = new fabric.IText(text, { 
 	     fontFamily: 'arial black',
 	     left: 800, 
 	     top: 150 ,
+	     fill:textColor,
 	  });
 	canvas.add(textElement);
-})
+});
 
 $('#save').click(function(){
-	var img = $("#canvas")[0].getContext('2d');
 	var canvasImage = $("#canvas")[0].toDataURL('image/png');
 	$.ajax({
         url: 'index.php',
         type:"POST",
         data: {canvasImage: canvasImage},
         success: function(data) {
-           // alert(data);
            display_preview();
         }
     });
@@ -57,10 +88,12 @@ $('.img-preview').click(function(){
 	});
 });
 
-$("#change-bg").click(function(){
-	var color = prompt("Enter color name");
-	$("#canvas").css("background-color",color);
+$("#change-bg").change(function(){
+	var color = $("#change-bg").val();
+	canvas.backgroundColor = color;
+	canvas.renderAll();
 });
+
 
 function display_preview(){
 	$.ajax({

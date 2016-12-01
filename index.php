@@ -1,10 +1,16 @@
-<?php require_once "functions.php";
+<?php
+    require_once "classes/Database.php";
+    require_once "classes/Images.php";
 	if(isset($_POST['canvasImage'])){
-		save_image();
+		$images = new Images();
+		$images->save();
+		// var_dump($_POST);
 	}
 	if(isset($_POST['clearAll'])){
-		clear_previews();
+		$images = new Images;
+		$images->deleteAll();
 	}
+  
 ?>
 <!DOCTYPE html>
 <html>
@@ -28,14 +34,21 @@
 	 form{
 	 	margin-top: 10px;
 	 }
+	 #text,
+	 #text-color,
+	 #text-submit{
+	 	display: none;
+	 }
 	</style>
 </head>
 <body>
 		<div class="preview">
 		<?php
-		$images = display_images();
-			if(!empty($images)){
-				foreach($images as $image){
+
+		$db = new Database();
+		$allImages = $db->getRows("SELECT * FROM images");
+			if(!empty($allImages)){
+				foreach($allImages as $image){
 					echo "<img class='img-preview' src='data:image/png;base64,". base64_encode($image['image']) ."'/>";
 				}
 			}
@@ -44,10 +57,15 @@
 		<canvas id="canvas" height="450px" width="1370px"></canvas>
 		<form method="POST">
 			<input type="button" name="save" id="save" value="Save"></input>
-			<input type="button" name="add-rect" id="add-rect" value="Add Rectangle"></input>
+			<input type="button" name="add-rect" id="add-rect" value="Add Square"></input>
 			<input type="button" name="add-circle" id="add-circle" value="Add Circle"></input>
 			<input type="button" name="add-text" id="add-text" value="Add Text"></input>
-			<input type="button" name="change-bg" id="change-bg" value="Change canvas background"></input>
+			<input type="text" name="text" id="text" placeholder="Enter your text"></input>
+			<input type="color" name="text-color" id="text-color"></input>
+			<input type="button" name="text-submit" id="text-submit" value="Add"></input>
+			<input type="button" name="undo" id="undo" value="Undo"></input>
+			<input type="button" name="redo" id="redo" value="Redo"></input>
+			<span>Change background color </span><input type="color" name="change-bg" id="change-bg"></input>
 			<input type="button" name="clear" id="clear" value="Clear canvas"></input>
 			<button type="sumbit" name="clearAll" id="clearAll">Delete previews</button>
 		</form>
