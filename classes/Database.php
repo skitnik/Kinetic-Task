@@ -6,6 +6,7 @@ class Database{
 	public function __construct(){
 		try {
 			new PDO('mysql:host=localhost;dbname=webrorco_kinetic_task', "webrorco_kinetic", "!test7test",array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"));
+			// $this->connection = new PDO('mysql:host=localhost;dbname=kinetik_task', "root", "",array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"));
 			$this->connection = new PDO('mysql:host=localhost;dbname=webrorco_kinetic_task', "webrorco_kinetic", "!test7test");
 			$this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 			$this->connection->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
